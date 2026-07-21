@@ -2,87 +2,56 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Canal Retro 90 Jaén - HD</title>
-    <!-- Cargador de señal M3U8 para navegadores -->
-    <script src="https://6641e38ac34c3.streamlock.net:1936/radioporcuna/radioporcuna/playlist.m3u8"></script>
+    <!-- Cargador HLS para vídeo en streaming -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        body {
-            background-color: #0d1117;
-            color: #ffffff;
-            font-family: system-ui, -apple-system, sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
+        html, body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
         }
-        .player-card {
-            background: linear-gradient(145deg, #161b22, #0d1117);
-            border: 1px solid #30363d;
-            border-radius: 20px;
-            padding: 30px;
-            width: 100%;
-            max-width: 450px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            text-align: center;
-        }
-        .badge {
-            background-color: #1f6feb;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 6px;
-            display: inline-block;
-            margin-bottom: 15px;
-        }
-        h1 {
-            font-size: 22px;
-            margin-bottom: 5px;
-        }
-        p {
-            color: #8b949e;
-            font-size: 14px;
-            margin-bottom: 25px;
-        }
-        audio {
-            width: 100%;
-            height: 54px;
-            border-radius: 30px;
-            outline: none;
+        video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: contain; /* Mantiene la proporción del vídeo sin deformarlo */
+            background-color: #000;
         }
     </style>
 </head>
 <body>
 
-    <div class="player-card">
-        <span class="badge">EMISIÓN HD</span>
-        <h1>Canal Retro 90 Jaén</h1>
-        <p>En directo</p>
-        
-        <!-- Reproductor con controles modernos de audio y volumen -->
-        <audio id="radioPlayer" controls autoplay></audio>
-    </div>
+    <!-- Reproductor de vídeo a pantalla completa -->
+    <video id="videoPlayer" controls autoplay playsinline></video>
 
     <script>
-        const audio = document.getElementById('radioPlayer');
-        // Pones tu enlace .m3u8 exacto dentro de las comillas
-        const streamUrl = 'https://66.41.e38.ac.34.ca.1936/RadioPorcuna/stream.m3u8';
+        const video = document.getElementById('videoPlayer');
+        // Pones tu enlace .m3u8 exacto del canal de vídeo aquí dentro
+        const streamUrl = 'https://6641e38ac34c3.streamlock.net:1936/radioporcuna/radioporcuna/playlist.m3u8';
 
         if (Hls.isSupported()) {
             const hls = new Hls();
             hls.loadSource(streamUrl);
-            hls.attachMedia(audio);
-        } else if (audio.canPlayType('application/vnd.apple.mpegurl')) {
-            // Compatibilidad para Safari / iPhone
-            audio.src = streamUrl;
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED,function() {
+                video.play().catch(e => console.log("Autoplay bloqueado por el navegador:", e));
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Compatibilidad directa para iPhone / Safari
+            video.src = streamUrl;
+            video.addEventListener('loadedmetadata',function() {
+                video.play().catch(e => console.log("Autoplay true:", e));
+            });
         }
     </script>
 

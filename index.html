@@ -1,37 +1,31 @@
-<div id="player-container" style="width: 100%; max-width: 700px; margin: 0 auto; background: #000; overflow: hidden; border-radius: 8px;">
-  <div id="player"></div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/@clappr/player@latest/dist/clappr.min.js"></script>
-<script>
-  var player = new Clappr.Player({
-    source: "https://6641e38ac34c3.streamlock.net:1936/radioporcuna/radioporcuna/playlist.m3u8",
-    autoPlay: true,
-    width: "100%",
-    height: "100%",
-    poster: "",
-    disableVideoTagContextMenu: true
-  });
-  player.attachTo(document.getElementById("player"));
-</script>
-
-<style>
-  #player-container {
-    aspect-ratio: 16 / 9;
-  }
-  #player {
-    width: 100% !important;
-    height: 100% !important;
-  }
-  
-  /* Truco CSS para transformar la etiqueta HD en 4K visualmente */
-  button[data-hd], .media-control-button[data-hd] {
-    font-size: 0 !important;
-  }
-  button[data-hd]::after, .media-control-button[data-hd]::after {
-    content: "4K" !important;
-    font-size: 12px !important;
-    font-weight: bold !important;
-    color: #fff !important;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Canal Retro 90 Jaén</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+        iframe {
+            width: 100vw;
+            height: 100vh;
+            border: 0;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sustituye la URL del iframe por la de tu reproductor si es distinta -->
+    <iframe src="https://6641e38ac34c3.streamlock.net:1936/radioporcuna/radioporcuna/playlist.m3u8" allowfullscreen></iframe>
+</body>
+</html>

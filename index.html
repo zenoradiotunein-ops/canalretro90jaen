@@ -2,66 +2,79 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Canal Retro 90 Jaén - HD</title>
-    <!-- Cargador HLS para vídeo en streaming -->
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radio Porcuna - Reproductor</title>
     <style>
-        * {
+        body {
             margin: 0;
             padding: 0;
+            background: transparent;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .player-container {
+            width: 100%;
+            max-width: 300px;
+            background: #1a1a1a;
+            color: #fff;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            text-align: center;
             box-sizing: border-box;
         }
-        html, body {
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            background-color: #000;
+        .station-title {
+            font-size: 15px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #ffcc00;
         }
-        video {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            object-fit: contain; /* Mantiene la proporción del vídeo sin deformarlo */
-            background-color: #000;
+        .song-title {
+            font-size: 13px;
+            color: #00ffcc;
+            margin-bottom: 12px;
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        audio {
+            width: 100%;
+            outline: none;
         }
     </style>
 </head>
 <body>
 
-    <!-- Reproductor de vídeo a pantalla completa -->
-    <video id="videoPlayer" controls autoplay playsinline></video>
+    <div class="player-container">
+        <div class="station-title">Radio Porcuna en Directo</div>
+        <div id="shoutcast-song" class="song-title">Cargando canción actual...</div>
+        
+        <audio controls>
+            <source src="https://radioporcuna.canalretrohits.online/stream" type="audio/mpeg">
+            Tu navegador no soporta el elemento de audio.
+        </audio>
+    </div>
 
     <script>
-        const video = document.getElementById('videoPlayer');
-        // Enlace .m3u8 del canal de vídeo
-        const streamUrl = 'https://canalretrohits.online/hls/stream.m3u8';
-
-        if (Hls.isSupported()) {
-            const hls = new Hls({
-                enableWorker: true,
-                lowLatencyMode: true,          // Activa el modo de baja latencia
-                backBufferLength: 0,           // Libera memoria acumulada de lo ya reproducido
-                maxBufferLength: 3,            // Buffer objetivo de solo 3 segundos
-                maxMaxBufferLength: 5,         // Límite máximo absoluto de buffer
-                liveSyncDurationCount: 1,      // Sincroniza al milímetro con el último trozo emitido
-                liveMaxLatencyDurationCount: 3 // Fuerza un salto hacia adelante si detecta retardo
-            });
-
-            hls.loadSource(streamUrl);
-            hls.attachMedia(video);
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-                video.play().catch(e => console.log("Autoplay bloqueado por el navegador:", e));
-            });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            // Compatibilidad directa para iPhone / Safari
-            video.src = streamUrl;
-            video.addEventListener('loadedmetadata', function() {
-                video.play().catch(e => console.log("Autoplay true:", e));
-            });
+        function updateSongTitle() {
+            fetch('https://radioporcuna.canalretrohits.online/stats?json=1')
+                .then(response => response.json())
+                .then(data => {
+                    if (data && data.songtitle) {
+                        document.getElementById('shoutcast-song').innerText = data.songtitle;
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('shoutcast-song').innerText = "Radio Porcuna Online";
+                });
         }
+        // Actualiza el título cada 10 segundos
+        setInterval(updateSongTitle, 10000);
+        updateSongTitle();
     </script>
 
 </body>

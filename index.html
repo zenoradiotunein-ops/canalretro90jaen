@@ -1,81 +1,33 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Radio Porcuna - Reproductor</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: transparent;
-            font-family: sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-        .player-container {
-            width: 100%;
-            max-width: 300px;
-            background: #1a1a1a;
-            color: #fff;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            text-align: center;
-            box-sizing: border-box;
-        }
-        .station-title {
-            font-size: 15px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #ffcc00;
-        }
-        .song-title {
-            font-size: 13px;
-            color: #00ffcc;
-            margin-bottom: 12px;
-            font-weight: bold;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        audio {
-            width: 100%;
-            outline: none;
-        }
-    </style>
-</head>
-<body>
-
-    <div class="player-container">
-        <div class="station-title">Radio Porcuna en Directo</div>
-        <div id="shoutcast-song" class="song-title">Cargando canción actual...</div>
-        
-        <audio controls>
-            <source src="https://radioporcuna.canalretrohits.online/stream" type="audio/mpeg">
-            Tu navegador no soporta el elemento de audio.
-        </audio>
+<div style="max-width: 320px; background: #1a1a1a; color: #fff; padding: 15px; border-radius: 12px; font-family: sans-serif; box-shadow: 0 4px 15px rgba(0,0,0,0.5); text-align: center;">
+    <!-- Título de la emisora -->
+    <div style="font-size: 15px; font-weight: bold; margin-bottom: 10px; color: #ffcc00;">Radio Porcuna en Directo</div>
+    
+    <!-- Título de la canción en tiempo real -->
+    <div id="shoutcast-song" style="font-size: 13px; color: #00ffcc; margin-bottom: 12px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+        Conectando con el servidor...
     </div>
 
-    <script>
-        function updateSongTitle() {
-            fetch('https://radioporcuna.canalretrohits.online/stats?json=1')
-                .then(response => response.json())
-                .then(data => {
-                    if (data && data.songtitle) {
-                        document.getElementById('shoutcast-song').innerText = data.songtitle;
-                    }
-                })
-                .catch(error => {
-                    document.getElementById('shoutcast-song').innerText = "Radio Porcuna Online";
-                });
-        }
-        // Actualiza el título cada 10 segundos
-        setInterval(updateSongTitle, 10000);
-        updateSongTitle();
-    </script>
+    <!-- Reproductor de audio HTML5 seguro -->
+    <audio controls style="width: 100%;">
+        <source src="https://radioporcuna.canalretrohits.online/stream" type="audio/mpeg">
+        Tu navegador no soporta el elemento de audio.
+    </audio>
+</div>
 
-</body>
-</html>
+<!-- Script directo optimizado -->
+<script>
+    function updateSongTitle() {
+        fetch('https://radioporcuna.canalretrohits.online/stats?json=1')
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.songtitle) {
+                    document.getElementById('shoutcast-song').innerText = data.songtitle;
+                }
+            })
+            .catch(error => {
+                document.getElementById('shoutcast-song').innerText = "Radio Porcuna Directo";
+            });
+    }
+    setInterval(updateSongTitle, 5000);
+    updateSongTitle();
+</script>
